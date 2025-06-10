@@ -1,0 +1,108 @@
+# Project Name
+Simple Note Taking App
+
+## Project Description
+A secure, multi-user, web-based note-taking application with distinct user roles and robust security features. The application will allow users to manage their notes effectively while providing administrators with oversight and control. It is intended for deployment on Microsoft Azure.
+
+## Target Audience
+- Regular Users: Individuals needing a secure platform to create, manage, and retrieve personal notes.
+- Administrators: Personnel responsible for user management, system monitoring, and ensuring the integrity of the application.
+
+## Desired Features
+
+### Backend Requirements
+- [ ] Django framework
+- [ ] PostgreSQL database
+- [ ] Implement RESTful API
+    - [ ] Define API using OpenAPI/Swagger specification (auto-generated via `drf-spectacular`)
+- [ ] JWT-based authentication system
+    - [ ] Implement token refresh mechanism
+- [ ] Two distinct user roles: regular users and administrators
+- [ ] Secure password hashing and storage
+- [ ] Input validation and sanitization for all endpoints
+
+### User Authentication Features
+- [ ] Admins create new users via Django admin interface (no public user registration)
+    - [ ] Initial admin user created via Django `createsuperuser` management command.
+- [ ] Login form with proper error handling
+- [ ] JWT token storage on the client-side
+- [ ] Automatic JWT token renewal mechanism
+- [ ] Logout functionality
+    - [ ] Implement server-side token invalidation (e.g., blacklist)
+
+### Note Management System
+
+#### Regular Users
+- [ ] Create new notes
+    - [ ] Include `title` field
+    - [ ] Include `content` field (plain text only)
+- [ ] Read/view their own notes
+    - [ ] Implement sorting options (by `title`, `created_at`)
+- [ ] Update their existing notes
+- [ ] Delete their own notes
+- [ ] Search functionality within their notes
+    - [ ] Search on `title` field using `LIKE` query
+
+#### Administrator Capabilities
+- [ ] Full CRUD (Create, Read, Update, Delete) operations on all users' notes
+- [ ] User management dashboard
+    - [ ] View user details
+    - [ ] Manually reset user passwords
+        - [ ] Admin sets a temporary password
+        - [ ] Admin is responsible for notifying the user of the temporary password (no system-enforced password change on next login)
+    - [ ] Change user roles
+    - [ ] Ability to disable/enable user accounts
+- [ ] View system statistics
+    - [ ] Total users
+    - [ ] Total notes
+    - [ ] Notes per user
+    - [ ] Active users in the last 7 days (defined as users who have logged in)
+- [ ] View system logs
+    - [ ] User logins (details of other logs like admin actions, failed logins to be decided later if necessary)
+
+### Database Schema
+- [ ] **Users table**
+    - [ ] `id` (Primary Key)
+    - [ ] `email` (Unique, Indexed)
+    - [ ] `password_hash`
+    - [ ] `role` (e.g., 'regular', 'admin' - simple text/enum field)
+    - [ ] `is_active` (Boolean, for disable/enable user accounts)
+    - [ ] `created_at`
+    - [ ] `updated_at`
+- [ ] **Notes table**
+    - [ ] `id` (Primary Key)
+    - [ ] `user_id` (Foreign Key to Users table)
+    - [ ] `title`
+    - [ ] `content` (Text field)
+    - [ ] `created_at`
+    - [ ] `updated_at`
+
+### API Security
+- [ ] Rate limiting (specifics to be defined later)
+- [ ] CORS (Cross-Origin Resource Sharing) configuration (to allow SWA origin)
+- [ ] Request validation middleware
+- [ ] Error handling middleware
+
+### Frontend Requirements
+- [ ] Vite + React + Router with TypeScript
+- [ ] Responsive design
+    - [ ] Utilize Tailwind CSS framework
+- [ ] Protected routes based on user roles
+- [ ] Real-time validation feedback for forms
+- [ ] Clear loading states for asynchronous operations
+- [ ] Comprehensive error handling and display
+    - [ ] Utilize toast notifications for errors and important messages
+- [ ] Clean and intuitive user interface
+- [ ] Consider auto-generation of API client/components from OpenAPI spec (e.g., using `openapi-typescript-codegen`)
+
+## Design Requests
+- [ ] *(No specific design requests yet - focusing on a clean and intuitive UI)*
+
+## Deployment Considerations
+- [ ] Frontend: Azure Static Web Apps (SWA)
+- [ ] Backend (Django): Docker container on Azure Container Apps
+- [ ] Database (PostgreSQL): Azure Database for PostgreSQL service
+
+## Other Notes
+- Security focus is on robust authentication as described and standard web application security practices. Advanced note content encryption at rest in the database is not a current requirement.
+- The method for an admin to securely notify a user of a temporary password should be considered during development (e.g., out-of-band communication).
